@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+  <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked> 
+<PostBuildEvent>ng build --aot</PostBuildEvent>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="src\app\shared\navbar.component.ts" />
+    <None Remove="src\app\TestBed\languagedescription.interface.ts" />
+    <None Remove="src\app\TestBed\socket.interface.ts" />
+    <None Remove="src\app\TestBed\sourcebundle.interface.ts" />
+    <None Remove="src\app\TestBed\testbed.component.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="System.Composition" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\app\shared\navbar.component.ts" />
+    <TypeScriptCompile Include="src\app\TestBed\languagedescription.interface.ts" />
+    <TypeScriptCompile Include="src\app\TestBed\socket.interface.ts" />
+    <TypeScriptCompile Include="src\app\TestBed\sourcebundle.interface.ts" />
+    <TypeScriptCompile Include="src\app\TestBed\testbed.component.ts" />
+  </ItemGroup>
+
+</Project>

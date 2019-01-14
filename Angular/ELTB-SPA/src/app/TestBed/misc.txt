@@ -1,0 +1,66 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NextObserver, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import * as socketIo from 'socket.io-client';
+import { SourceBundle } from './sourcebundle.interface';
+import { LanguageDescription } from './languageDescription.interface';
+import { Socket } from './socket.interface';
+
+@Injectable()
+export class EsolangService {
+
+    private static _interruptSequence = '\t';
+    private static _targetUrl = "api/EsotericLanguage/";
+    private _channel: Socket;
+
+    constructor(private _http: HttpClient) {
+        console.log('built ELS - ok' + this._http);
+    }
+
+    supportedLanguages() {
+        return this
+            ._http
+          .get(EsolangService._targetUrl + "SupportedLanguages")
+          .pipe(map((data: any[]) => {
+            return <LanguageDescription[]>data
+          }));
+    }
+
+    execute(bundle: SourceBundle, handler: NextObserver<any>, interrupt: () => void) {
+        this.close();
+        this._channel = socketIo("http://" + window.location.host + "/" + EsolangService._targetUrl + "execute");
+        this._channel
+          .on('data', m => {
+            var received = m['data'];
+            if (!received || received[0] != EsolangService._interruptSequence) {
+              console.log(received);
+              handler.next(received);
+            }
+            else
+              interrupt();
+          }
+            //},
+            //e => console.log('WS error: ' + e),
+            //() => {
+            //    console.log('Seems like the subject is exhausted');
+            //    handler.complete();
+            //}
+      );
+      //this._channel.
+      this.send('|' + bundle.language + '|' + bundle.source);
+    }
+
+    send(text: string) {
+      this._channel.emit('', text);
+    }
+
+    close() {
+        if (this._channel) {
+            //this._channel.close(true);
+            //this._channel = null;
+            console.log('Closed ws');
+        }
+    }
+
+}

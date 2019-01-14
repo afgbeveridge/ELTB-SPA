@@ -1,0 +1,126 @@
+﻿@using ELTB.Models
+
+<h1>@Language</h1>
+
+<div class="row">
+        <div class="col-12">
+                @Metadata.Summary
+        </div>
+        <div class="col-12">
+                <a href="@Metadata.DetailsUrl" target="_blank">Link</a>
+        </div>
+</div>
+
+<div class="row">
+        <div class="col-12">
+                <h4>Source code</h4>
+        </div>
+</div>
+<div class="row">
+        <div class="col-12">
+                <textarea cols="80" rows="10" bind="@SourceCode" style="min-width: 100%;"
+                          name="sourceCode" required onkeyup="this.dispatchEvent(new Event('change', { 'bubbles': true }));"></textarea>
+        </div>
+</div>
+<p></p>
+<div class="row">
+        <div class="col-12">
+                <button type="submit" class="btn btn-primary" onclick="@Run" disabled='@(NotRunnable || Running)'>
+                        Run
+                </button>&nbsp;
+                <button type="button" class="btn btn-danger" disabled="@(Running == false)" onclick="@StopExecution">
+                        Cancel
+                </button>
+        </div>
+</div>
+
+@if (InputRequired) {
+        <div class="row">
+                <div class="col-12">
+                        <h4>Input</h4>
+                </div>
+                <div class="col-12">
+                        <input bind="@ProgramInput" required />&nbsp;
+                        <button type="button" class="btn btn-primary" onclick="@SendInput">
+                                Send
+                        </button>
+                </div>
+        </div>
+}
+<div class="row">
+        <div class="col-12">
+                <h4>Output</h4>
+        </div>
+</div>
+<div class="row">
+        <div class="col-12">
+                <textarea cols="80" rows="10" disabled style="min-width: 100%;" bind="@Output"></textarea>
+        </div>
+</div>
+
+
+@functions {
+        [Parameter]
+        private string Language { get; set; }
+
+        private string _Source;
+
+        private bool NotRunnable { get; set; } = true;
+
+        private bool Running { get; set; } = false;
+
+        private string SourceCode
+        {
+                get => _Source; set
+                {
+                        _Source = value;
+                        NotRunnable = string.IsNullOrWhiteSpace(value);
+                }
+        }
+
+        private string Output { get; set; }
+
+        private string ProgramInput { get; set; } = string.Empty;
+
+        private bool InputRequired { get; set; }
+
+        private LanguageMetadata Metadata => LanguageMetadata.All.FirstOrDefault(m => m.Name == Language);
+
+        async Task Run(UIMouseEventArgs e) {
+                Output = string.Empty;
+                Running = true;
+                await JSRuntime.Current.InvokeAsync<object>("websocketInterop.send", $"|{Language}|{SourceCode}");
+                StateHasChanged();
+        }
+
+        async Task SendInput() {
+                await JSRuntime.Current.InvokeAsync<object>("websocketInterop.send", ProgramInput);
+                InputRequired = false;
+                StateHasChanged();
+        }
+
+        async Task StopExecution() {
+                await JSRuntime.Current.InvokeAsync<object>("websocketInterop.close");
+                Running = false;
+                StateHasChanged();
+        }
+
+        protected override async Task OnInitAsync() {
+                await JSRuntime.Current.InvokeAsync<object>("websocketInterop.connect", new DotNetObjectRef(this));
+        }
+
+        [JSInvokable]
+        public void OnMessage(string msg) {
+                if (msg == "\t")
+                        InputRequired = true;
+                else
+                        Output += msg;
+                StateHasChanged();
+        }
+
+        [JSInvokable]
+        public void OnReconnect() {
+                Running = false;
+                StateHasChanged();
+        }
+}
