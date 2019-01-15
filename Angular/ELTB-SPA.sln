@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELTB-SPA", "ELTB-SPA\ELTB-S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "..\..\Common\Shared\Shared.csproj", "{0AF96056-4218-4C0D-95A3-39E555A77A22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELTB-Services", "..\API\ELTB-Services\ELTB-Services.csproj", "{D4136034-9C02-4D40-B569-2FFBF9C161D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELTB-Services", "..\API\ELTB-Services\ELTB-Services.csproj", "{D4136034-9C02-4D40-B569-2FFBF9C161D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ELTBModels", "..\Shared\ELTBModels\ELTBModels.csproj", "{1B27914A-B72A-488B-9CB3-E3F43533B6AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{D4136034-9C02-4D40-B569-2FFBF9C161D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4136034-9C02-4D40-B569-2FFBF9C161D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4136034-9C02-4D40-B569-2FFBF9C161D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B27914A-B72A-488B-9CB3-E3F43533B6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B27914A-B72A-488B-9CB3-E3F43533B6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B27914A-B72A-488B-9CB3-E3F43533B6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B27914A-B72A-488B-9CB3-E3F43533B6AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
