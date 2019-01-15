@@ -4,17 +4,20 @@ window.websocketInterop = {
 
         socket: null,
 
-        connect: function (helper) {
+        connect: function (url, helper, msg) {
                 console.log("Connecting");
-                socket = new WebSocket("ws://localhost:55444/api/EsotericLanguage/execute");
+                socket = new WebSocket(url);
+
+                socket.onopen = function (evt) {
+                        msg && socket.send(msg);
+                }
                 socket.onmessage = function (event) {
                         console.debug("WebSocket message received:", event);
                         helper.invokeMethod("OnMessage", event.data);
                 };
                 socket.onclose = function (evt) {
-                        console.log("Socket closed. Re-open");
-                        helper.invokeMethod("OnReconnect");
-                        window.websocketInterop.connect(helper);
+                        console.log("Socket closed. Notify this..");
+                        helper.invokeMethod("OnChannelClose");
                 }
                 console.log("Connected and ready....");
         },
