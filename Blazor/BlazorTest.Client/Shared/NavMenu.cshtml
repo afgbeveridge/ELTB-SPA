@@ -16,25 +16,27 @@
                         </NavLink>
                 </li>
                 @foreach (var lang in LanguageMetadata.All) {
-                        <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="@lang.Name">
-                                        <span class="oi oi-list-rich" aria-hidden="true"></span> @lang.Name
-                                </NavLink>
-                        </li>
+                <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="@Target(@lang.Name)">
+                                <span class="oi oi-list-rich" aria-hidden="true"></span> @lang.Name
+                        </NavLink>
+                </li>
                 }
         </ul>
 </div>
 
 @functions {
 
-bool collapseNavMenu = true;
+        bool collapseNavMenu = true;
 
-void ToggleNavMenu() {
-        collapseNavMenu = !collapseNavMenu;
-}
+        void ToggleNavMenu() {
+                collapseNavMenu = !collapseNavMenu;
+        }
 
-protected override async Task OnInitAsync() {
-        LanguageMetadata.All = await httpClient.GetJsonAsync<List<LanguageMetadata>>("http://localhost:55444/api/EsotericLanguage/SupportedLanguages");
-}
+        string Target(string language) => $"Execute/{language}";
+
+        protected override async Task OnInitAsync() {
+                LanguageMetadata.All = await httpClient.GetJsonAsync<List<LanguageMetadata>>("http://localhost:55444/api/EsotericLanguage/SupportedLanguages");
+        }
 
 }

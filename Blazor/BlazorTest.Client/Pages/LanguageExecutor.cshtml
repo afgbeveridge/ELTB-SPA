@@ -1,0 +1,11 @@
+﻿@page "/Execute/{Language}"
+
+<InterpreterContent Language="@Language" />
+
+@functions {
+
+        [Parameter]
+        private string Language { get; set; }
+
+}
+
